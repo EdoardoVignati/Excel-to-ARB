@@ -3,15 +3,17 @@ import json
 
 df = pd.read_excel("./l10n.xlsx", sheet_name=0)
 languages = {}
-for row in df.itertuples():
-    for key, val in row._asdict().items():
-        if str(key) == "Index" or str(key) == "key":
-            continue
-        if languages.get(str(key)) is None:
-            languages[str(key)] = {}
-        languages[str(key)][row.key] = val
+keys = {}
+for index, value in df.to_dict().items():
+    if str(index) == "key":
+        keys = value
+        continue
+    languages[str(index)] = value
 
-for lang in languages.keys():
+for lang, values in languages.items():
+    current_lang_map = {}
+    for i in range(0, len(keys)):
+        current_lang_map.update({keys[i]: values[i]})
     file_name = "app_" + lang + ".arb"
-    with open(file_name, "x", encoding="utf-8") as f:
-        json.dump(languages[lang], f, indent=1, sort_keys=True, ensure_ascii=False)
+    with open(file_name, "w", encoding="utf-8") as f:
+        json.dump(current_lang_map, f, indent=1, sort_keys=True, ensure_ascii=False)
