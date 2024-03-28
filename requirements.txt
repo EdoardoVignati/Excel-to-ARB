@@ -1,2 +1,1 @@
-pandas
-openpyxl
+pandas==2.2.1
